@@ -45,7 +45,6 @@ app.get('/movies/:id', async (req, res) => {
     res.send(movieById)
 })
 
-export default app;
 
 //POST req to add a movie as a favorite
 app.put('/movies/:movieId/favorites', async (req, res) => {
@@ -82,6 +81,20 @@ app.put('/movies/:movieId/favorites', async (req, res) => {
         return res.json(newFavorite)
     }
 })
+
+//get users favorite movies by userId
+app.get('/:userId/favorites', async (req, res) => {
+    const userId = req.params.userId
+
+    const favorites = await client.favorite.findMany({
+        where: {
+            userId: userId
+        }
+    })
+    return res.json(favorites)
+})
+
+export default app;
 
 // try {
 //     const favoritedMovie = await client.favorite.create({

@@ -45,6 +45,7 @@ describe("Get movies", () => {
     })
 })
 
+
 describe("Get movies by id", () => {
     //make a get req to pull in a specific movie by searching the id
     test("get a movie by id works", async () => {
@@ -118,10 +119,33 @@ describe("movie favoriting", () => {
             movieId: "3453453"
         }
 
-
         expect(favoriteResponse.status).toEqual(200)
         expect(favoriteResponse.body).toEqual(favoritedMovie)
 
     })
 
+})
+
+describe("get favorite movies by userId", () => {
+    test("get a list of favorite movies by userId", async () => {
+        const favoritedMovies = [
+            {
+                userId: "0001",
+                movieId: "3453453"
+            },
+            {
+                userId: "0001",
+                movieId: "5645645"
+            },
+            {
+                userId: "0001",
+                movieId: "345897"
+            }
+        ]
+
+        const favMovieById = await supertest(app).get("/0001/favorites")
+
+        expect(favMovieById.status).toEqual(200)
+        expect(favMovieById.body).toEqual(favoritedMovies)
+    })
 })
