@@ -41,8 +41,8 @@ model MovieTag {
   tagId   String
 
   //relations
-  movie Movie @relation(fields: [movieId], references: [id])
-  tag   Tag   @relation(fields: [tagId], references: [id])
+  movie Movie @relation(fields: [movieId], references: [id], onDelete: Cascade)
+  tag   Tag   @relation(fields: [tagId], references: [id], onDelete: Cascade)
 
   //constraints
   @@unique([movieId, tagId])
@@ -53,8 +53,8 @@ model Favorite {
   movieId String
 
   //relations
-  user  User  @relation(fields: [userId], references: [id])
-  movie Movie @relation(fields: [movieId], references: [id])
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  movie Movie @relation(fields: [movieId], references: [id], onDelete: Cascade)
 
   //constraints
   @@unique([movieId, userId])
