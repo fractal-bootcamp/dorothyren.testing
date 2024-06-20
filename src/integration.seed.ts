@@ -46,11 +46,17 @@ const seed = async () => {
         ],
     });
 
-    const favorites = await client.favorite.create({
-        data: {
+    const favorites = await client.favorite.createMany({
+        data: [{
             userId: "0001",
             movieId: "3453453"
-        }
+        }, {
+            userId: "0001",
+            movieId: "5645645"
+        }, {
+            userId: "0001",
+            movieId: "345897"
+        },]
     })
 };
 
