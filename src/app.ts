@@ -3,8 +3,11 @@ import { PrismaClient } from "@prisma/client";
 
 import { router as userRoutes } from "./routes/user.routes";
 import client from "./lib/client";
+import { PrismaClientValidationError } from "@prisma/client/runtime/library";
 
 const app: Application = express();
+
+app.use(express.json())
 
 app.use("/users", userRoutes);
 
@@ -14,6 +17,7 @@ app.get('/movies', async (req, res) => {
     const search = req.query.title as string | undefined;
     if (!search) {
         const movies = await client.movie.findMany()
+        console.log(movies)
         return res.send(movies)
     }
 
@@ -42,3 +46,65 @@ app.get('/movies/:id', async (req, res) => {
 })
 
 export default app;
+
+//POST req to add a movie as a favorite
+app.put('/movies/:movieId/favorites', async (req, res) => {
+    const movieId = req.params.movieId
+    const userId = req.body.userId
+
+    // 1. check if the movie is already favorited by asking the DB.
+    const checkFavorite = await client.favorite.findFirst({
+        where: {
+            userId: userId,
+            movieId: movieId
+        },
+    })
+    // 2. if it already exists, delete the favorite
+    if (checkFavorite !== null) {
+        const deleted = await client.favorite.delete({
+            where: {
+                movieId_userId: {
+                    userId: userId,
+                    movieId: movieId
+                },
+            }
+        })
+        return res.json("Favorite has been removed")
+    }
+    // 3. otherwise, make a new favorite
+    else {
+        const newFavorite = await client.favorite.create({
+            data: {
+                userId: userId,
+                movieId: movieId
+            },
+        })
+        return res.json(newFavorite)
+    }
+})
+
+// try {
+//     const favoritedMovie = await client.favorite.create({
+//         data: {
+//             userId: userId,
+//             movieId: movieId,
+//         }
+//     })
+// } catch (e) {
+//     const favoritedMovie = null
+
+// check if this is a unique constraint error
+// if (e instanceof PrismaClientValidationError) {
+//     // if it is, delete the favorite
+//     const deleteFavorite = await client.favorite.delete({
+//         where: {
+//             movieId_userId: {
+//                 movieId,
+//                 userId
+//             }
+//         }
+//     })
+//     res.send("you have removed a favorite"),
+//         console.log("did you receive the favorite deleted message?")
+// }
+
