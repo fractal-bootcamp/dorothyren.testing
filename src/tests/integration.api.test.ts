@@ -149,3 +149,23 @@ describe("get favorite movies by userId", () => {
         expect(favMovieById.body).toEqual(favoritedMovies)
     })
 })
+
+describe("post tags associated with a movieId", () => {
+    test("create a tag associated with a certain movie", async () => {
+        const taggedMovie =
+        {
+            tagText: "test genre"
+        }
+
+        //make a post req to create a tag for a movie with a movieId
+        const tagForMovie = await supertest(app)
+            .post("/movies/345897/tag")
+            .set({ "content-type": "application/json" })
+            .send({
+                tagText: "test genre"
+            })
+
+        expect(tagForMovie.status).toEqual(200)
+        expect(tagForMovie.body.tagText).toEqual(taggedMovie.tagText)
+    })
+})

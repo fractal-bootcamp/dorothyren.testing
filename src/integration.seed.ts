@@ -12,6 +12,14 @@ const seed = async () => {
         where: {},
     });
 
+    await client.tag.deleteMany({
+        where: {},
+    });
+
+    await client.movieTag.deleteMany({
+        where: {},
+    });
+
     const user = await client.user.createMany({
         data: [
             {
@@ -58,6 +66,31 @@ const seed = async () => {
             movieId: "345897"
         },]
     })
-};
+
+    const tags = await client.tag.createMany({
+        data: [{
+            id: "100",
+            tagText: "horror"
+        }, {
+            id: "200",
+            tagText: "sci-fi"
+        }, {
+            id: "300",
+            tagText: "rom-com"
+        },]
+    })
+
+    const movieTags = await client.movieTag.createMany({
+        data: [
+            {
+                movieId: "345897",
+                tagId: "200"
+            }, {
+                movieId: "345897",
+                tagId: "300"
+            }
+        ]
+    })
+}
 
 export default seed;
