@@ -45,8 +45,26 @@ app.get('/movies/:id', async (req, res) => {
     res.send(movieById)
 })
 
+//POST req to add tags to a movie
+app.post('/movies/:movieId/tag', async (req, res) => {
+    const movieId = req.params.movieId
+    const tagText = req.body.tagText
 
-//POST req to add a movie as a favorite
+    const newTag = await client.tag.create({
+        data: {
+            tagText: tagText,
+            movieTags: {
+                create: {
+                    movieId
+                }
+            }
+        }
+    })
+    res.send(newTag)
+})
+
+
+//PUT req to add a movie as a favorite
 app.put('/movies/:movieId/favorites', async (req, res) => {
     const movieId = req.params.movieId
     const userId = req.body.userId
