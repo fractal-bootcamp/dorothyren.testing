@@ -1,5 +1,6 @@
 module.exports = {
   preset: "ts-jest",
   testEnvironment: "node",
-  // setupFilesAfterEnv: ['<rootDir>/singleton.ts'],
+  setupFilesAfterEnv: ['<rootDir>/src/lib/singleton.ts'],
+
 };
